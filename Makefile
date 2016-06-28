@@ -1,7 +1,7 @@
 all: node_modules-stamp
 
 latest.zip:
-	wget https://downloads.raspberrypi.org/raspbian_lite_latest -O latest.zip
+	wget -N https://downloads.raspberrypi.org/raspbian_lite_latest -O latest.zip
 
 latest.img: latest.zip
 	unzip latest.zip '*.img'
@@ -22,7 +22,7 @@ target/home/pi/scan: mount-stamp
 	cp -a config package.json scan.js target/home/pi/scan/
 
 target/tmp/node_latest_armhf.deb: target/home/pi/scan
-	wget http://node-arm.herokuapp.com/node_latest_armhf.deb -O $@
+	wget -N http://node-arm.herokuapp.com/node_latest_armhf.deb -O $@
 	touch $@
 
 target/usr/local/bin/node: target/tmp/node_latest_armhf.deb
