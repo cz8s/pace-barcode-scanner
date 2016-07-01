@@ -1,3 +1,5 @@
+'use strict'; 
+
 var sleep = require('sleep');
 
 var Gpio = require('onoff').Gpio,
@@ -6,11 +8,11 @@ var Gpio = require('onoff').Gpio,
     numbers = [ "abcdef", "bc", "abdeg", "abcdg", "bcfg", "acdfg", "acdefg", "abc", "abcdefg", "abcdfg" ];
 var digit = [];
 var seg = [];
-for (key in pin_digit) {
+for (var key in pin_digit) {
   digit[key] = new Gpio(pin_digit[key], 'out');
   digit[key].writeSync(0);
 };  
-for (key in pin_seg) {
+for (var key in pin_seg) {
   seg[key] = new Gpio(pin_seg[key], 'out');
   seg[key].writeSync(1);
 };  
@@ -18,19 +20,19 @@ for (key in pin_seg) {
 
 function show_digit(num) {
   var all = 'abcdefg';
-  for (key in all) {
+  for (var key in all) {
     seg[all[key]].writeSync(1);
   }
-  for (key in numbers[num]) {
+  for (var key in numbers[num]) {
     seg[numbers[num][key]].writeSync(0);
   };
 };
 
 
 function show_number(num) {
-  for (i = 0; i < 200; i++) {
-    for (d in num) {
-      pos = parseInt(d)+1;
+  for (var i = 0; i < 200; i++) {
+    for (var d in num) {
+      var pos = parseInt(d)+1;
       digit[pos].writeSync(1);
       show_digit(num[pos-1]);
       sleep.usleep(2000);
