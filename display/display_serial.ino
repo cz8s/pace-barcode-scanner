@@ -8,15 +8,14 @@ String number;
 
 void receiveData(int byteCount){
   byte c;
-  Serial.println(byteCount);
   while ( Wire.available()) {
     c = Wire.read();
+    if (c == 255) {
+      sevseg.setNumber(number.toInt(), 1);
+      number = "";
+    } else {
     number += c;
-  }
-  Serial.println(number);
-  if (number.length() >3) {
-    sevseg.setNumber(number.toInt(), 1);
-    number = "";
+    }
   }
 }
 
