@@ -3,6 +3,8 @@ const config = require('config');
 const request = require('request');
 const LinuxInputListener = require('linux-input-device');
 const i2c = require('i2c');
+const Gpio = require('onoff').Gpio;
+var colors = { blue: 17, red: 27, green: 22 };
 
 var address = 0x04;
 var wire = new i2c(address, {device: '/dev/i2c-1'});
@@ -21,7 +23,9 @@ events.forEach(function(event) {
 });
 
 var number = {};
+
 function handle_keys(key,event) {
+  light('blue');
   if (keylist.indexOf(key) >= 0)  {
     if (typeof number[event] === "undefined") {
       number[event] = '';
@@ -35,8 +39,10 @@ function handle_keys(key,event) {
       .on('response', function(response) {
         console.log(response.statusCode)
       })
-    .on('error', red_light)
-    send_to_display(number[event],red_light);
+    .on('error', function(err) {
+      light('red');
+    });
+    send_to_display(number[event],light);
     number[event] = '';
   }
 };
@@ -46,10 +52,23 @@ function send_to_display(number) {
     wire.writeByte(number[digit], function(err) {});
   }
   wire.writeByte(255, function(err) {}); //end byte
+  light('green');
 };
 
-function red_light(msg) {
-  console.log('red light blinks: ', msg);
+function light(color) {
+  console.log('light blinks: ', colors[color]);
+  var led = new Gpio(colors[color], 'out');
+  led.writeSync(1);
+  setTimeout(light_off,1000,color);
 }
+
+function light_off(color) {
+  var led = new Gpio(colors[color], 'out');
+  led.writeSync(0);
+  console.log('switching off', color);
+}
+
+
+
 
 
