@@ -2,6 +2,10 @@ const readline = require('readline');
 const config = require('config');
 const request = require('request');
 const LinuxInputListener = require('linux-input-device');
+const i2c = require('i2c');
+
+var address = 0x04;
+var wire = new i2c(address, {device: '/dev/i2c-1'});
 
 var apiurl = config.get('pace-url')+'/api/scan';
 var keylist = [2,3,4,5,6,7,8,9,10,11]
@@ -31,10 +35,21 @@ function handle_keys(key,event) {
       .on('response', function(response) {
         console.log(response.statusCode)
       })
-    .on('error', function(err) {
-      console.log(err)
-    })
+    .on('error', red_light)
+    send_to_display(number[event],red_light);
     number[event] = '';
   }
 };
+
+function send_to_display(number) {
+ for ( digit in number) {
+    wire.writeByte(number[digit], function(err) {});
+  }
+  wire.writeByte(255, function(err) {}); //end byte
+};
+
+function red_light(msg) {
+  console.log('red light blinks: ', msg);
+}
+
 
