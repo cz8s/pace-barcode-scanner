@@ -13,6 +13,7 @@ var apiurl = config.get('pace-url')+'/api/scan';
 var keylist = [2,3,4,5,6,7,8,9,10,11]
 var events = config.get('events')
 var input = {};
+light_on('blue')
 events.forEach(function(event) {
   input[event] = new LinuxInputListener('/dev/input/event'+event);
   input[event].on('state', function(value, key, kind) {
@@ -33,10 +34,8 @@ function handle_keys(key,event) {
     number[event] = "" + number[event] + (key-1)
   }
   if (key == 28) {
-    console.log(number[event]);
     request.post(apiurl, {form:{startnumber:input,time:Date.now()}})
       .on('response', function(response) {
-        console.log(response.statusCode)
       })
     .on('error', function(err) {
       blink('red');
@@ -66,11 +65,12 @@ function light_on(color) {
 function light_off(color) {
   var led = new Gpio(colors[color], 'out');
   led.writeSync(0);
-  console.log('switching off', color);
 }
 
-process.on('SIGINT', function () {
- light_off('blue')
-});
+function exitHandler(options, err) {
+    light_off('blue')
+    process.exit();
+}
 
+process.on('exit', exitHandler.bind(null, {exit:true}));
 
