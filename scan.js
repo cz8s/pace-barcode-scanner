@@ -1,4 +1,3 @@
-const readline = require('readline');
 const config = require('config');
 const request = require('request');
 const LinuxInputListener = require('linux-input-device');
