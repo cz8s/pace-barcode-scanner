@@ -1,5 +1,7 @@
 {
   "pace-url": "http://localhost:3000",
-  "events": [0]
+  "events": [0],
+  "display": false,
+  "led": false
 }
 

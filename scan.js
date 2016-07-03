@@ -7,7 +7,9 @@ const Gpio = require('onoff').Gpio;
 var colors = { blue: 17, red: 27, green: 22 };
 
 var address = 0x04;
-var wire = new i2c(address, {device: '/dev/i2c-1'});
+if (config.get('display')) {
+  var wire = new i2c(address, {device: '/dev/i2c-1'});
+}
 
 var apiurl = config.get('pace-url')+'/api/scan';
 var keylist = [2,3,4,5,6,7,8,9,10,11]
@@ -40,7 +42,9 @@ function handle_keys(key,event) {
     .on('error', function(err) {
       blink('red');
     });
-    send_to_display(number[event],blink);
+    if (config.get('display')) {
+      send_to_display(number[event],blink);
+    }
     number[event] = '';
   }
 };
@@ -58,13 +62,17 @@ function blink(color) {
   setTimeout(light_off,1000,color);
 }
 function light_on(color) {
-  var led = new Gpio(colors[color], 'out');
-  led.writeSync(1);
+  if (config.get('led')) {
+    var led = new Gpio(colors[color], 'out');
+    led.writeSync(1);
+  }
 }
 
 function light_off(color) {
-  var led = new Gpio(colors[color], 'out');
-  led.writeSync(0);
+  if (config.get('led')) {
+    var led = new Gpio(colors[color], 'out');
+    led.writeSync(0);
+  }
 }
 
 function exitHandler(options, err) {
