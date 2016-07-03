@@ -25,7 +25,6 @@ events.forEach(function(event) {
 var number = {};
 
 function handle_keys(key,event) {
-  light('blue');
   if (keylist.indexOf(key) >= 0)  {
     if (typeof number[event] === "undefined") {
       number[event] = '';
@@ -40,9 +39,9 @@ function handle_keys(key,event) {
         console.log(response.statusCode)
       })
     .on('error', function(err) {
-      light('red');
+      blink('red');
     });
-    send_to_display(number[event],light);
+    send_to_display(number[event],blink);
     number[event] = '';
   }
 };
@@ -52,14 +51,16 @@ function send_to_display(number) {
     wire.writeByte(number[digit], function(err) {});
   }
   wire.writeByte(255, function(err) {}); //end byte
-  light('green');
+  blink('green');
 };
 
-function light(color) {
-  console.log('light blinks: ', colors[color]);
+function blink(color) {
+  light_on(color)
+  setTimeout(light_off,1000,color);
+}
+function light_on(color) {
   var led = new Gpio(colors[color], 'out');
   led.writeSync(1);
-  setTimeout(light_off,1000,color);
 }
 
 function light_off(color) {
@@ -68,7 +69,8 @@ function light_off(color) {
   console.log('switching off', color);
 }
 
-
-
+process.on('SIGINT', function () {
+ light_off('blue')
+});
 
 
