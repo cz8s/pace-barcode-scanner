@@ -19,7 +19,7 @@ events.forEach(function(event) {
 var number = {};
 
 function handle_keys(key,event) {
-  let paceRequest = request.defaults({
+  var paceRequest = request.defaults({
       headers: {'X-Pace-Token': config.get(token)}
   })
   if (keylist.indexOf(key) >= 0)  {
