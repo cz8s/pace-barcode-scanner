@@ -29,19 +29,16 @@ function handle_keys(key,event) {
   if (key == 28) {
     request.post(apiurl, {form:{startnumber:input,time:Date.now()}})
       .on('response', function(response) {
+       console.log(response);
       })
     .on('error', function(err) {
-      blink('red');
+      console.log('error from server');
     });
-    if (config.get('display')) {
-      send_to_display(number[event],blink);
-    }
     number[event] = '';
   }
 };
 
 function exitHandler(options, err) {
-    light_off('blue')
     process.exit();
 }
 
