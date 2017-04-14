@@ -19,6 +19,9 @@ events.forEach(function(event) {
 var number = {};
 
 function handle_keys(key,event) {
+  let paceRequest = request.defaults({
+      headers: {'X-Pace-Token': config.get(token)}
+  })
   if (keylist.indexOf(key) >= 0)  {
     if (typeof number[event] === "undefined") {
       number[event] = '';
@@ -27,7 +30,7 @@ function handle_keys(key,event) {
     number[event] = "" + number[event] + (key-1)
   }
   if (key == 28) {
-    request.post(apiurl, {form:{startnumber:input,time:Date.now()}})
+    paceRequest.post(apiurl, {form:{startnumber:input,time:Date.now()}})
       .on('response', function(response) {
        console.log(response);
       })
