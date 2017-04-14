@@ -14,7 +14,6 @@
     "config": "^1.21.0",
     "jasmine-node": "^1.14.5",
     "linux-input-device": "^1.0.0",
-    "onoff": "^1.1.1",
     "request": "^2.72.0"
   }
 }
