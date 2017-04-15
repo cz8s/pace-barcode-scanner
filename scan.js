@@ -19,7 +19,6 @@ events.forEach(function(event) {
 
 var number = {};
 
-
 function handle_keys(key,event) {
   if (keylist.indexOf(key) >= 0)  {
     if (typeof number[event] === "undefined") {
@@ -29,7 +28,7 @@ function handle_keys(key,event) {
     number[event] = "" + number[event] + (key-1)
   }
   if (key == 28) {
-    sendResult(input,Date.now());
+    sendResult(number[event],Date.now());
     number[event] = '';
   };
 };
