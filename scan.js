@@ -2,9 +2,11 @@ const config = require('config');
 const request = require('request');
 const moment = require('moment');
 const LinuxInputListener = require('linux-input-device');
+var Gpio = require('onoff').Gpio;
 
 var apiurl = config.get('pace-url')+'/api/scan';
 var keylist = [2,3,4,5,6,7,8,9,10,11]
+var colors = { blue: 17, red: 27, green: 22 };
 var events = config.get('events')
 var input = {};
 
@@ -63,6 +65,24 @@ function handleResponse(error, response, body) {
    }
 }
  
+function blink(color) {
+  light_on(color)
+  setTimeout(light_off,1000,color);
+}
+function light_on(color) {
+  if (config.get('led')) {
+    var led = new Gpio(colors[color], 'out');
+    led.writeSync(1);
+  }
+}
+
+function light_off(color) {
+  if (config.get('led')) {
+    var led = new Gpio(colors[color], 'out');
+    led.writeSync(0);
+  }
+}
+
 
 process.on('exit', exitHandler.bind(null, {exit:true}));
 
