@@ -31,8 +31,10 @@ function handle_keys(key,event) {
     number[event] = "" + number[event] + (key-1)
   }
   if (key == 28) {
-    sendResult(number[event],Date.now());
-    writeCSV(number[event],Date.now());
+    time = moment().unix();
+    sendResult(number[event],time);
+    writeCSV(number[event],time);
+    console.log(time);
     number[event] = '';
   };
 };
@@ -52,10 +54,6 @@ function sendResult(startnumber,time) {
           }
   };
   request(options, handleResponse);
-};
-
-function finishSeconds() {
-  return moment().unix() - moment().startOf('day').unix();
 };
 
 function handleResponse(error, response, body) {
