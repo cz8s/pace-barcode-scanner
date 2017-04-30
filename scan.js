@@ -1,6 +1,7 @@
 const config = require('config');
 const request = require('request');
 const moment = require('moment');
+const fs = require('fs');
 const LinuxInputListener = require('linux-input-device');
 var Gpio = require('onoff').Gpio;
 
@@ -31,6 +32,7 @@ function handle_keys(key,event) {
   }
   if (key == 28) {
     sendResult(number[event],Date.now());
+    writeCSV(number[event],Date.now());
     number[event] = '';
   };
 };
@@ -83,6 +85,13 @@ function light_off(color) {
   }
 }
 
+function writeCSV(startnumber,time) {
+var csvstring = '"' + startnumber + '","' + time + '"\n'
+fs.appendFile('results.csv', csvstring , function (err) {
+    if (err) throw err;
+    console.log('Saved ', startnumber);
+});
+};
 
 process.on('exit', exitHandler.bind(null, {exit:true}));
 
