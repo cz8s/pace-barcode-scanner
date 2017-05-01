@@ -7,7 +7,7 @@ var Gpio = require('onoff').Gpio;
 
 var apiurl = config.get('pace-url')+'/api/scan';
 var keylist = [2,3,4,5,6,7,8,9,10,11]
-var colors = { blue: 17, red: 27, green: 22 };
+var colors = { red: 15, green: 14 };
 var events = config.get('events')
 var input = {};
 
@@ -21,6 +21,8 @@ events.forEach(function(event) {
 });
 
 var number = {};
+blink('green');
+blink('red');
 
 function handle_keys(key,event) {
   if (keylist.indexOf(key) >= 0)  {
@@ -34,7 +36,6 @@ function handle_keys(key,event) {
     time = moment().unix();
     sendResult(number[event],time);
     writeCSV(number[event],time);
-    console.log(time);
     number[event] = '';
   };
 };
@@ -58,15 +59,17 @@ function sendResult(startnumber,time) {
 
 function handleResponse(error, response, body) {
     if (!error ) {
-      console.log(response.statusCode);
+      if (response.statusCode === 200) { blink('green');
+      } else { blink('red'); };
     }
    else {
      console.log(error)
+     blink('red');
    }
-}
+};
  
 function blink(color) {
-  light_on(color)
+  light_on(color);
   setTimeout(light_off,1000,color);
 }
 function light_on(color) {
@@ -87,7 +90,6 @@ function writeCSV(startnumber,time) {
 var csvstring = '"' + startnumber + '","' + time + '"\n'
 fs.appendFile('results.csv', csvstring , function (err) {
     if (err) throw err;
-    console.log('Saved ', startnumber);
 });
 };
 

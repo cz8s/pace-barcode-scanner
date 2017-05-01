@@ -2,6 +2,7 @@
   "pace-url": "http://dev.lauf-gegen-rechts.de:3000",
   "events": [0],
   "token": "HeiYohhoo6quoh5",
-  "display": false
+  "display": false,
+  "led": true
 }
 
